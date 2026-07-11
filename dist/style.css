@@ -1,0 +1,262 @@
+/* Reference Lesson: Overview - Week Two includes SCSS variables, nesting, mixins, and responsive layout. */
+/* Requirement: The design is written from scratch in SASS/SCSS using the provided style guide colors. */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  /* Requirement: Use the provided green background color from the design assets. */
+  background: #1c531d;
+  color: #f7fbf7;
+  font-family: "Open Sans", Arial, sans-serif;
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  width: min(1120px, calc(100% - 32px));
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 0 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.game-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 28px;
+}
+
+.title-block h1 {
+  /* Reference Lesson: Overview - SCSS nesting groups child styles with their parent component. */
+  margin: 0 0 8px;
+  font-size: 42px;
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.title-block p {
+  max-width: 520px;
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+.attempts-panel {
+  margin: 0;
+  text-align: right;
+  font-size: 40px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.game-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+}
+
+.game-board {
+  /* Requirement: The board visually supports six cards on desktop. */
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 22px;
+  align-items: center;
+}
+
+.card {
+  width: 100%;
+  aspect-ratio: 281 / 388;
+  border: 0;
+  border-radius: 8px;
+  background: #f7f7f4;
+  color: #5d5d5d;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(0);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.24);
+}
+
+.card:focus-visible {
+  outline: 4px solid rgba(245, 209, 94, 0.9);
+  outline-offset: 4px;
+}
+
+.card:not(:disabled):hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.32);
+}
+
+.card:disabled {
+  cursor: default;
+}
+
+.card--face-down {
+  /* Requirement: Cards start face down and use the provided card-back image. */
+  background:
+    #ffffff
+    url("../images/card-flip-card-image.png")
+    center / 100% 100%
+    no-repeat;
+}
+
+.card--face-down .card__value {
+  display: none;
+}
+
+.card--flipped,
+.card--matched {
+  background: #f7f7f4;
+}
+
+.card--matched {
+  /* Requirement: Matched cards stay visibly locked instead of flipping back. */
+  box-shadow:
+    0 0 0 5px rgba(245, 209, 94, 0.75),
+    0 12px 22px rgba(0, 0, 0, 0.2);
+}
+
+.card__value {
+  font-size: 76px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.game-footer {
+  min-height: 120px;
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+}
+
+.game-message {
+  min-height: 44px;
+  margin: 0;
+  text-align: center;
+  font-size: 34px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+body[data-game-status="won"] .game-message {
+  color: #f5d15e;
+}
+
+body[data-game-status="lost"] .game-message {
+  color: #ffb4a8;
+}
+
+.reset-button {
+  /* Requirement: The Start Over button follows the provided blue button color. */
+  min-width: 260px;
+  min-height: 68px;
+  border: 0;
+  border-radius: 8px;
+  background: #238ab6;
+  color: #ffffff;
+  padding: 14px 32px;
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
+}
+
+.reset-button:hover {
+  background: #1d759b;
+  transform: translateY(-2px);
+}
+
+.reset-button:focus-visible {
+  outline: 4px solid rgba(245, 209, 94, 0.9);
+  outline-offset: 4px;
+}
+
+@media (max-width: 980px) {
+  /* Reference Lesson: Overview - responsive SCSS keeps the game usable across viewport sizes. */
+  .game-board {
+    /* Requirement: The custom design remains usable on smaller screens. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100% - 24px, 420px);
+    padding: 30px 0 24px;
+    gap: 32px;
+  }
+
+  .game-header {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .title-block h1 {
+    font-size: 34px;
+  }
+
+  .title-block p {
+    font-size: 18px;
+  }
+
+  .attempts-panel {
+    text-align: left;
+    font-size: 30px;
+  }
+
+  .game-stage {
+    gap: 32px;
+  }
+
+  .game-board {
+    gap: 14px;
+  }
+
+  .card__value {
+    font-size: 54px;
+  }
+
+  .game-message {
+    min-height: 68px;
+    font-size: 28px;
+  }
+
+  .reset-button {
+    width: 100%;
+    min-width: 0;
+    font-size: 24px;
+  }
+}

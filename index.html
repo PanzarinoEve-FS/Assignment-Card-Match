@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card Match</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="dist/style.css" />
+    <!-- Requirement: Build a browser game with HTML, compiled TypeScript, and compiled SASS/CSS. -->
+    <script src="dev/dist/index.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="game-header">
+        <div class="title-block">
+          <h1>Card Match</h1>
+          <!-- Requirement: The objective is to find all matching card pairs within the attempt limit. -->
+          <p>Use your three attempts to find all three matching pairs of cards.</p>
+        </div>
+
+        <!-- Requirement: Show the player how many attempts remain. -->
+        <p class="attempts-panel" aria-live="polite">
+          Attempts left: <span class="attempts-count">3</span>
+        </p>
+      </header>
+
+      <section class="game-stage" aria-label="Card matching game">
+        <!-- Requirement: TypeScript renders six shuffled cards into this board at the start of each game. -->
+        <div class="game-board" aria-label="Card grid"></div>
+
+        <div class="game-footer">
+          <!-- Requirement: Show win, loss, and turn feedback messages. -->
+          <p class="game-message" aria-live="polite">Pick two cards to find a match.</p>
+          <!-- Requirement: A new game can be started, which reshuffles positions and values. -->
+          <button class="reset-button" type="button">Start Over</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
