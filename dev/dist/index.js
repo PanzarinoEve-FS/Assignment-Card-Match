@@ -121,14 +121,16 @@ const findCardById = (cardId) => {
     return cards.find((card) => card.id === cardId);
 };
 // Reference Lesson: Typed Functions & Arguments - this function accepts a GameCard and returns a string.
-const getCardLabel = (card) => {
+// Requirement: Each card exposes an accessible label so screen reader users know its position and state.
+const getCardLabel = (card, position, total) => {
+    const location = `card ${position} of ${total}`;
     if (card.state === CardState.Matched) {
-        return `Matched card ${card.value}`;
+        return `Matched ${location}, value ${card.value}`;
     }
     if (card.state === CardState.Flipped) {
-        return `Flipped card ${card.value}`;
+        return `Flipped ${location}, value ${card.value}`;
     }
-    return "Face-down card";
+    return `Face-down ${location}`;
 };
 // Reference Lesson: Typed Functions & Arguments - this function returns the message string shown to the player.
 const getVisibleMessage = () => {
@@ -165,13 +167,15 @@ const renderGameInfo = () => {
 const renderBoard = () => {
     boardElement.innerHTML = "";
     // Requirement: There are six cards displayed on the board after the deck is created.
-    cards.forEach((card) => {
+    cards.forEach((card, index) => {
         const cardButton = document.createElement("button");
         const cardValue = document.createElement("span");
         cardButton.type = "button";
         cardButton.className = `card card--${card.state}`;
         cardButton.dataset.cardId = card.id.toString();
-        cardButton.setAttribute("aria-label", getCardLabel(card));
+        cardButton.setAttribute("aria-label", getCardLabel(card, index + 1, cards.length));
+        // Accessibility: announce matched/face-down status changes without stealing focus.
+        cardButton.setAttribute("aria-pressed", (card.state === CardState.Flipped).toString());
         cardButton.disabled =
             gameStatus !== GameStatus.Playing ||
                 isComparing ||

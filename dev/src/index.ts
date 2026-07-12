@@ -1,26 +1,33 @@
-// Reference Lesson: Introduction To TypScript - this .ts file compiles to browser-ready JavaScript.
-// Reference Lesson: Using Enumerations - enums describe fixed game and card states.
+/*
+Eve Panzarino(jhankins)
+Assignment: Card Match
+7/11/2026
+*/
+
+// Lesson: Introduction To TypScript - this .ts file compiles to browser-ready JavaScript.
+// Lesson: Using Enumerations - enums describe fixed game and card states.
+// Define Card State
 enum CardState {
   FaceDown = "face-down",
   Flipped = "flipped",
   Matched = "matched"
 }
-
+// Define Game State
 enum GameStatus {
   Playing = "playing",
   Won = "won",
   Lost = "lost"
 }
-
-// Reference Lesson: Introduction To Interfaces - this interface defines the shape of each card object.
+\
+// Lesson: Introduction To Interfaces - this interface defines the shape of each card object.
 interface GameCard {
   id: number;
   value: string;
   state: CardState;
 }
 
-// Reference Lesson: Introduction To Interfaces - the GameCard contract is used by card arrays and functions.
-// Reference Lesson: Using Data Types - constants use explicit number and string array types.
+// Lesson: Introduction To Interfaces - the GameCard contract is used by card arrays and functions.
+// Lesson: Using Data Types - constants use explicit number and string array types.
 // Requirement: The player has a maximum of 3 tries/attempts.
 const MAX_ATTEMPTS: number = 3;
 // Requirement: The set includes 3 pairs of matching cards, which makes 6 cards total.
@@ -30,7 +37,7 @@ const CARD_VALUE_POOL: string[] = ["A", "K", "Q", "J", "10", "9", "8", "7", "6",
 // Requirement: Non-matching cards flip back to their face-down state after a short delay.
 const FLIP_BACK_DELAY: number = 850;
 
-// Reference Lesson: Using Type Assertions - querySelector results are asserted as specific element types.
+// Lesson: Using Type Assertions - querySelector results are asserted as specific element types.
 // Requirement: Type assertions are used to work with browser DOM elements in TypeScript.
 const boardElement = document.querySelector(".game-board") as HTMLElement;
 const attemptsElement = document.querySelector(".attempts-count") as HTMLElement;
@@ -47,7 +54,7 @@ let pendingFlipTimeout: number | undefined;
 let previousValueSignature: string = "";
 let previousDeckSignature: string = "";
 
-// Reference Lesson: Typed Functions & Arguments - functions include typed parameters and return types.
+// Lesson: Typed Functions & Arguments - functions include typed parameters and return types.
 const assertRequiredElement = (element: HTMLElement | null, selector: string): void => {
   if (!element) {
     throw new Error(`Missing required element: ${selector}`);
@@ -91,7 +98,7 @@ const getDeckSignature = (deck: GameCard[]): string => {
   return deck.map((card: GameCard): string => card.value).join("|");
 };
 
-// Reference Lesson: Using Data Types - string arrays are used to choose the card values for each game.
+// Lesson: Using Data Types - string arrays are used to choose the card values for each game.
 // Requirement: Each new game uses a different set of card values when possible.
 const chooseCardValues = (): string[] => {
   let selectedValues: string[] = shuffleValues(CARD_VALUE_POOL).slice(0, MATCH_PAIR_COUNT);
@@ -155,20 +162,23 @@ const findCardById = (cardId: number): GameCard | undefined => {
   return cards.find((card: GameCard): boolean => card.id === cardId);
 };
 
-// Reference Lesson: Typed Functions & Arguments - this function accepts a GameCard and returns a string.
-const getCardLabel = (card: GameCard): string => {
+//Lesson: Typed Functions & Arguments - this function accepts a GameCard and returns a string.
+// Requirement: Each card exposes an accessible label so screen reader users know its position and state.
+const getCardLabel = (card: GameCard, position: number, total: number): string => {
+  const location: string = `card ${position} of ${total}`;
+
   if (card.state === CardState.Matched) {
-    return `Matched card ${card.value}`;
+    return `Matched ${location}, value ${card.value}`;
   }
 
   if (card.state === CardState.Flipped) {
-    return `Flipped card ${card.value}`;
+    return `Flipped ${location}, value ${card.value}`;
   }
 
-  return "Face-down card";
+  return `Face-down ${location}`;
 };
 
-// Reference Lesson: Typed Functions & Arguments - this function returns the message string shown to the player.
+//Lesson: Typed Functions & Arguments - this function returns the message string shown to the player.
 const getVisibleMessage = (): string => {
   if (gameStatus === GameStatus.Won) {
     return "You Won!";
@@ -201,7 +211,7 @@ const updateGameStatus = (): void => {
   gameStatus = GameStatus.Playing;
 };
 
-// Reference Lesson: Typed Functions & Arguments - void functions update the page without returning a value.
+// Lesson: Typed Functions & Arguments - void functions update the page without returning a value.
 const renderGameInfo = (): void => {
   attemptsElement.textContent = attemptsRemaining.toString();
   messageElement.textContent = getVisibleMessage();
@@ -212,14 +222,16 @@ const renderBoard = (): void => {
   boardElement.innerHTML = "";
 
   // Requirement: There are six cards displayed on the board after the deck is created.
-  cards.forEach((card: GameCard): void => {
+  cards.forEach((card: GameCard, index: number): void => {
     const cardButton: HTMLButtonElement = document.createElement("button");
     const cardValue: HTMLSpanElement = document.createElement("span");
 
     cardButton.type = "button";
     cardButton.className = `card card--${card.state}`;
     cardButton.dataset.cardId = card.id.toString();
-    cardButton.setAttribute("aria-label", getCardLabel(card));
+    cardButton.setAttribute("aria-label", getCardLabel(card, index + 1, cards.length));
+    // Accessibility: announce matched/face-down status changes without stealing focus.
+    cardButton.setAttribute("aria-pressed", (card.state === CardState.Flipped).toString());
     cardButton.disabled =
       gameStatus !== GameStatus.Playing ||
       isComparing ||
@@ -326,7 +338,7 @@ assertRequiredElement(messageElement, ".game-message");
 assertRequiredElement(resetButton, ".reset-button");
 
 boardElement.addEventListener("click", (event: MouseEvent): void => {
-  // Reference Lesson: Using Type Assertions - event targets are asserted before using DOM methods.
+  // Lesson: Using Type Assertions - event targets are asserted before using DOM methods.
   const target = event.target as HTMLElement;
   const cardButton = target.closest(".card") as HTMLButtonElement | null;
 

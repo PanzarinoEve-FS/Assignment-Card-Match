@@ -1,5 +1,15 @@
 /* Reference Lesson: Overview - Week Two includes SCSS variables, nesting, mixins, and responsive layout. */
 /* Requirement: The design is written from scratch in SASS/SCSS using the provided style guide colors. */
+/* Requirement: The Open Sans font is bundled locally instead of loaded from a third-party CDN. */
+@font-face {
+  font-family: "Open Sans";
+  src: url("../dev/fonts/OpenSans-VariableFont_wdth,wght.ttf") format("truetype-variations");
+  font-weight: 300 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -19,6 +29,33 @@ body {
 
 button {
   font: inherit;
+}
+
+/* Accessibility: visually hidden until focused, so the skip link only appears for keyboard users. */
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -80px;
+  z-index: 10;
+  background: #238ab6;
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: top 180ms ease;
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
+}
+.skip-link:focus {
+  top: 16px;
+  outline: 4px solid rgba(245, 209, 94, 0.9);
+  outline-offset: 4px;
+}
+
+/* Accessibility: the skip target should not draw a visible outline when focused programmatically. */
+.game-stage:focus {
+  outline: none;
 }
 
 .app-shell {
